@@ -1,0 +1,57 @@
+<div class="auth-container">
+  <div class="auth-card glass-panel">
+    <h2 class="auth-title">{{ isLoginMode() ? 'Welcome Back' : 'Create Account' }}</h2>
+
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+
+      <!-- SOLO EN REGISTRO -->
+      <div class="form-group" *ngIf="!isLoginMode()">
+        <label for="username" class="form-label">Username</label>
+        <input id="username" type="text" formControlName="username" class="form-input" placeholder="your_username"
+          autocomplete="username">
+        <small class="error-text"
+          *ngIf="authForm.get('username')?.invalid && (authForm.get('username')?.dirty || authForm.get('username')?.touched)">
+          Username is required
+        </small>
+      </div>
+
+      <!-- PARA AMBOS -->
+      <div class="form-group">
+        <label for="email" class="form-label">Email</label>
+        <input id="email" type="email" formControlName="email" class="form-input" placeholder="your@email.com"
+          autocomplete="email">
+        <small class="error-text"
+          *ngIf="authForm.get('email')?.invalid && (authForm.get('email')?.dirty || authForm.get('email')?.touched)">
+          Please enter a valid email address
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input id="password" type="password" formControlName="password" class="form-input" placeholder="••••••••"
+          autocomplete="current-password">
+        <small class="error-text"
+          *ngIf="authForm.get('password')?.invalid && (authForm.get('password')?.dirty || authForm.get('password')?.touched)">
+          Password must be at least 6 characters long
+        </small>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;"
+        [disabled]="authForm.invalid">
+        {{ isLoginMode() ? 'Sign In' : 'Sign Up' }}
+      </button>
+
+      <div *ngIf="errorMessage()" class="error-msg" [innerHTML]="errorMessage()"></div>
+
+    </form>
+
+    <div class="toggle-text">
+      <span *ngIf="isLoginMode()">
+        Don't have an account? <a class="toggle-link" (click)="toggleMode()">Register</a>
+      </span>
+      <span *ngIf="!isLoginMode()">
+        Already have an account? <a class="toggle-link" (click)="toggleMode()">Login</a>
+      </span>
+    </div>
+  </div>
+</div>

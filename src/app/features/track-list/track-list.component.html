@@ -1,0 +1,16 @@
+<h1 class="page-title">Top Rated Tracks</h1>
+
+<!-- Actions bar could go here -->
+<div style="display: flex; justify-content: flex-end; margin-bottom: 2rem; margin-top: -1rem;">
+    <a routerLink="/upload" class="btn btn-primary">Upload a New Track</a>
+</div>
+<!-- Reactive display using the tracks() signal from the service -->
+<div class="track-grid">
+    <div *ngFor="let track of musicService.tracks()">
+        <app-track-item [track]="track" (onVote)="handleVote($event)"></app-track-item>
+    </div>
+</div>
+
+<div *ngIf="!musicService.tracks().length" style="text-align: center; margin-top: 4rem; color: var(--text-secondary);">
+    <p>No tracks found. Add one above to get started!</p>
+</div>
