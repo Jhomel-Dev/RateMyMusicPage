@@ -1,5 +1,5 @@
 <nav class="navbar" *ngIf="!isNavHidden()">
-    <div class="brand" routerLink="/" style="cursor: pointer;">
+    <div class="brand" routerLink="/">
         <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 18V5l12-2v13"></path>
@@ -10,23 +10,22 @@
     </div>
 
     <!-- Authenticated Links -->
-    <div class="nav-actions" *ngIf="isAuthenticated()" style="display: flex; gap: 1rem; align-items: center;">
-        <a routerLink="/feed" style="color: var(--text-primary); text-decoration: none;">Feed</a>
-        <a routerLink="/upload" style="color: var(--text-primary); text-decoration: none;">Upload Track</a>
-        <a routerLink="/profile" style="color: var(--text-primary); text-decoration: none;">Profile</a>
+    <div class="nav-actions nav-links" *ngIf="isAuthenticated()">
+        <a routerLink="/feed" class="nav-link">Feed</a>
+        <a routerLink="/upload" class="nav-link">Upload Track</a>
+        <a routerLink="/profile" class="nav-link">Profile</a>
 
-        <div class="user-greeting" *ngIf="authService.currentUser()"
-            style="margin-left: 1rem; padding-left: 1rem; border-left: 1px solid rgba(255,255,255,0.2);">
+        <div class="user-greeting" *ngIf="authService.currentUser()">
             Hello, {{ authService.currentUser()?.username }}
         </div>
-        <button class="btn btn-secondary" (click)="logout()" style="padding: 0.5rem 1rem;">
+        <button class="btn btn-secondary btn-nav" (click)="logout()">
             Logout
         </button>
     </div>
 
     <!-- Guest Links -->
-    <div class="nav-actions" *ngIf="!isAuthenticated()" style="display: flex; gap: 1rem; align-items: center;">
-        <a routerLink="/auth" class="btn btn-secondary" style="padding: 0.5rem 1rem; text-decoration: none;">Sign In</a>
-        <a routerLink="/auth" class="btn btn-primary" style="padding: 0.5rem 1rem; text-decoration: none;">Register</a>
+    <div class="nav-actions nav-links" *ngIf="!isAuthenticated()">
+        <a routerLink="/auth" class="btn btn-secondary btn-nav">Sign In</a>
+        <a routerLink="/auth" class="btn btn-primary btn-nav">Register</a>
     </div>
 </nav>

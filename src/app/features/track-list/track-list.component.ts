@@ -1,7 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MusicService } from '../../core/services/music.service';
+import { TrackService } from '../../core/services/track.service';
+import { VoteService } from '../../core/services/vote.service';
 import { TrackItemComponent } from './track-item/track-item.component';
 
 @Component({
@@ -28,19 +29,46 @@ import { TrackItemComponent } from './track-item/track-item.component';
       padding: 1.5rem;
       margin-bottom: 2rem;
     }
+    .loading-container {
+        text-align: center;
+        margin-top: 4rem;
+        color: var(--text-secondary);
+    }
+    .spinner-anim {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        border-top-color: var(--accent-primary);
+        animation: spin 1s ease-in-out infinite;
+    }
+    .loading-text {
+        margin-top: 1rem;
+    }
+    .empty-container {
+        text-align: center;
+        margin-top: 4rem;
+        color: var(--text-secondary);
+    }
+    @keyframes spin { 
+        to { transform: rotate(360deg); } 
+    }
   `]
 })
 export class TrackListComponent implements OnInit {
-  musicService = inject(MusicService);
+  trackService = inject(TrackService);
+  voteService = inject(VoteService);
 
   // Public signal reference for the template
-  tracks = this.musicService.tracks;
+  tracks = this.trackService.tracks;
 
   ngOnInit() {
-    this.musicService.loadTracks();
+    this.trackService.loadTracks();
   }
 
   handleVote(event: { trackId: string, isHot: boolean }) {
-    this.musicService.vote(event.trackId, event.isHot).subscribe();
+    this.voteService.vote(event.trackId, event.isHot).subscribe();
   }
 }
+
