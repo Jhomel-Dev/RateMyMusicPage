@@ -1,5 +1,46 @@
+.navbar {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
 .brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     cursor: pointer;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.user-greeting {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-left: 1rem;
+    padding-left: 1rem;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.icon {
+    color: var(--accent-primary);
 }
 
 .nav-links {
@@ -16,10 +57,4 @@
 .btn-nav {
     padding: 0.5rem 1rem;
     text-decoration: none;
-}
-
-.user-greeting {
-    margin-left: 1rem;
-    padding-left: 1rem;
-    border-left: 1px solid rgba(255, 255, 255, 0.2);
 }

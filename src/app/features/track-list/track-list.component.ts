@@ -51,6 +51,12 @@ import { TrackItemComponent } from './track-item/track-item.component';
         margin-top: 4rem;
         color: var(--text-secondary);
     }
+    .upload-btn-container {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 2rem;
+        margin-top: -1rem;
+    }
     @keyframes spin { 
         to { transform: rotate(360deg); } 
     }
