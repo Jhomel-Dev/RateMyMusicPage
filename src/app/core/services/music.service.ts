@@ -5,14 +5,17 @@ import { tap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 export interface Track {
-    _id: string;
+    id: string;
     title: string;
-    artist: string;
-    avgScore: number;
+    artistId: string;
+    genre: string;
+    audioUrl: string;
+    eloScore: number;
+    userVote?: boolean;
 }
 
 export interface VoteResponse {
-    voteId: string;
+    voteId: string | null;
     newEloScore: number;
 }
 
@@ -40,7 +43,19 @@ export class MusicService {
                 return of([]);
             })
         ).subscribe((tracks) => {
-            this.tracksSignal.set(tracks);
+            // After loading tracks, fetch user votes to populate the userVote property
+            this.http.get<any[]>(`${this.apiUrl}/votes`).pipe(
+                catchError(err => {
+                    console.error('Error fetching user votes', err);
+                    return of([]);
+                })
+            ).subscribe((votes) => {
+                const tracksWithVotes = tracks.map(track => {
+                    const vote = votes.find(v => v.trackId === track.id);
+                    return { ...track, userVote: vote ? vote.isHot : undefined };
+                });
+                this.tracksSignal.set(tracksWithVotes);
+            });
         });
     }
 
@@ -49,7 +64,9 @@ export class MusicService {
         return this.http.post<VoteResponse>(`${this.apiUrl}/votes`, { trackId, isHot }).pipe(
             tap((response) => {
                 this.tracksSignal.update(tracks => tracks.map(track =>
-                    track._id === trackId ? { ...track, eloScore: response.newEloScore } : track
+                    track.id === trackId
+                        ? { ...track, eloScore: response.newEloScore, userVote: response.voteId ? isHot : undefined }
+                        : track
                 ));
             })
         );

@@ -1,23 +1,25 @@
 <div class="track-card glass-panel">
     <div class="track-info">
         <div class="track-title">{{ track().title }}</div>
-        <div class="track-artist">{{ track().artist }}</div>
+        <div class="track-artist">{{ track().artistId }}</div>
     </div>
 
     <div class="track-score">
-        {{ track().avgScore | number:'1.0-1' }}
-        <span class="score-label">Avg. Score</span>
+        {{ track().eloScore }}
+        <span class="score-label">ELO Score</span>
     </div>
 
     <div class="vote-section">
-        <button class="vote-btn vote-down" (click)="voteDown()" title="Vote Down">
+        <button class="vote-btn vote-down" [class.active-down]="track().userVote === false" (click)="voteDown()"
+            title="Vote Down">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <polyline points="19 12 12 19 5 12"></polyline>
             </svg>
         </button>
-        <button class="vote-btn vote-up" (click)="voteUp()" title="Vote Up">
+        <button class="vote-btn vote-up" [class.active-up]="track().userVote === true" (click)="voteUp()"
+            title="Vote Up">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="12" y1="19" x2="12" y2="5"></line>

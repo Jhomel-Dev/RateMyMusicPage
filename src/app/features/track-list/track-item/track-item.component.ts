@@ -70,8 +70,8 @@ import { Track } from '../../../core/services/music.service';
         background: rgba(99, 102, 241, 0.2);
         border-color: var(--accent-primary);
     }
-    .vote-up:hover { color: #10b981; }
-    .vote-down:hover { color: #ef4444; }
+    .vote-up:hover, .vote-btn.active-up { color: #10b981; border-color: #10b981; background: rgba(16, 185, 129, 0.1); }
+    .vote-down:hover, .vote-btn.active-down { color: #ef4444; border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
   `]
 })
 export class TrackItemComponent {
@@ -79,13 +79,13 @@ export class TrackItemComponent {
   track = input.required<Track>();
 
   // Output events
-  onVote = output<{ trackId: string, score: number }>();
+  onVote = output<{ trackId: string, isHot: boolean }>();
 
   voteUp() {
-    this.onVote.emit({ trackId: this.track()._id, score: 1 });
+    this.onVote.emit({ trackId: this.track().id, isHot: true });
   }
 
   voteDown() {
-    this.onVote.emit({ trackId: this.track()._id, score: -1 });
+    this.onVote.emit({ trackId: this.track().id, isHot: false });
   }
 }
