@@ -1,23 +1,22 @@
 <div class="auth-container">
-    <div class="auth-card glass-panel" style="max-width: 500px; padding: 3rem; text-align: center;">
+    <div class="auth-card glass-panel auth-card-incomplete">
         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
             stroke="var(--accent-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            style="margin-bottom: 1.5rem;">
+            class="alert-icon">
             <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
             <line x1="12" y1="9" x2="12" y2="13"></line>
             <line x1="12" y1="17" x2="12.01" y2="17"></line>
         </svg>
 
-        <h2 class="auth-title" style="margin-bottom: 1rem; font-size: 1.8rem;">Incomplete Profile</h2>
-        <p style="color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.6;">
-            Your account has been created, but you must register whether you are a <b style="color: white;">Normal
+        <h2 class="auth-title auth-title-large">Incomplete Profile</h2>
+        <p class="auth-description">
+            Your account has been created, but you must register whether you are a <b class="text-highlight">Normal
                 User</b> or
-            an <b style="color: white;">Artist</b> before you can browse the platform, upload music, or vote for
+            an <b class="text-highlight">Artist</b> before you can browse the platform, upload music, or vote for
             other tracks.
         </p>
 
-        <button class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 0.8rem;"
-            (click)="goToOnboarding()">
+        <button class="btn btn-primary submit-btn-large" (click)="goToOnboarding()">
             Complete my Profile now
         </button>
     </div>

@@ -1,7 +1,7 @@
 <div class="auth-container">
-    <div class="auth-card glass-panel" style="max-width: 500px; padding: 2.5rem;">
-        <h2 class="auth-title" style="margin-bottom: 0.5rem;">Create your Profile</h2>
-        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Complete your information
+    <div class="auth-card glass-panel auth-card-wide">
+        <h2 class="auth-title auth-title-margin">Create your Profile</h2>
+        <p class="auth-subtitle">Complete your information
             before
             starting</p>
 
@@ -9,8 +9,7 @@
 
             <div class="form-group">
                 <label>Your Role</label>
-                <select formControlName="role" class="form-input"
-                    style="appearance: auto; background-color: rgba(255,255,255,0.05);">
+                <select formControlName="role" class="form-input form-select">
                     <option value="User">Normal User</option>
                     <option value="Artist">Artist (I can upload music)</option>
                 </select>
@@ -21,8 +20,7 @@
 
                 <div class="avatar-upload-area" (click)="triggerFileInput()">
                     <div class="avatar-preview" *ngIf="previewImage">
-                        <img [src]="previewImage" alt="Avatar Preview"
-                            style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;">
+                        <img [src]="previewImage" alt="Avatar Preview" class="avatar-preview-img">
                     </div>
                     <div class="avatar-placeholder" *ngIf="!previewImage">
                         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
@@ -36,22 +34,21 @@
                 </div>
 
                 <input type="file" id="avatarUpload" accept="image/*" (change)="onFileSelected($event)"
-                    style="display: none;">
+                    class="file-input-hide">
 
-                <input type="text" formControlName="avatarUrl" (input)="onUrlChange($event)" class="form-input"
-                    placeholder="Or if you prefer, paste a direct image link..." style="margin-top: 0.5rem;">
+                <input type="text" formControlName="avatarUrl" (input)="onUrlChange($event)"
+                    class="form-input url-input" placeholder="Or if you prefer, paste a direct image link...">
             </div>
 
             <div class="form-group">
                 <label>Biography (Optional)</label>
-                <textarea formControlName="bio" class="form-input"
-                    placeholder="Tell us a little bit about yourself or your music..." rows="3"
-                    style="resize: vertical;"></textarea>
+                <textarea formControlName="bio" class="form-input bio-textarea"
+                    placeholder="Tell us a little bit about yourself or your music..." rows="3"></textarea>
             </div>
 
             <p class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</p>
 
-            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;"
+            <button type="submit" class="btn btn-primary submit-btn"
                 [disabled]="onboardingForm.invalid || isSubmitting">
                 {{ isSubmitting ? 'Saving...' : 'Complete and Enter' }}
             </button>

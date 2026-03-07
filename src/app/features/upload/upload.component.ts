@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MusicService } from '../../core/services/music.service';
+import { UploadService } from '../../core/services/upload.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,10 +9,10 @@ import { Router } from '@angular/router';
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule],
     template: `
-    <div class="upload-container" style="max-width: 500px; margin: 2rem auto; padding: 2rem;">
-        <h1 class="page-title" style="margin-bottom: 2rem; font-size: 2.5rem; text-align: center; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Upload Track</h1>
+    <div class="upload-container">
+        <h1 class="page-title">Upload Track</h1>
         
-        <div class="glass-panel" style="padding: 2rem; border-radius: 12px;">
+        <div class="glass-panel upload-card">
             <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
                 
                 <div class="form-group">
@@ -25,7 +25,7 @@ import { Router } from '@angular/router';
 
                 <div class="form-group">
                     <label for="genre" class="form-label">Genre</label>
-                    <select id="genre" formControlName="genre" class="form-input" style="appearance: auto;">
+                    <select id="genre" formControlName="genre" class="form-input form-select">
                         <option value="" disabled selected>Select a genre</option>
                         <option value="Pop">Pop</option>
                         <option value="Rock">Rock</option>
@@ -43,29 +43,39 @@ import { Router } from '@angular/router';
 
                 <div class="form-group">
                     <label for="audio" class="form-label">Audio File (.mp3, .wav)</label>
-                    <input id="audio" type="file" (change)="onFileSelected($event)" accept="audio/*" class="form-input" style="padding: 0.6rem;">
+                    <input id="audio" type="file" (change)="onFileSelected($event)" accept="audio/*" class="form-input file-input">
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;" [disabled]="isUploading()">
+                <button type="submit" class="btn btn-primary submit-btn" [disabled]="isUploading()">
                     {{ isUploading() ? 'Uploading...' : 'Upload Track' }}
                 </button>
 
-                <div *ngIf="errorMessage()" style="color: #ef4444; font-size: 0.85rem; margin-top: 1rem; text-align: center;">
+                <div *ngIf="errorMessage()" class="error-message">
                     {{ errorMessage() }}
                 </div>
                 
-                <div *ngIf="successMessage()" style="color: #10b981; font-size: 0.85rem; margin-top: 1rem; text-align: center;">
+                <div *ngIf="successMessage()" class="success-message">
                     {{ successMessage() }}
                 </div>
 
             </form>
         </div>
     </div>
-  `
+  `,
+    styles: [`
+    .upload-container { max-width: 500px; margin: 2rem auto; padding: 2rem; }
+    .page-title { margin-bottom: 2rem; font-size: 2.5rem; text-align: center; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .upload-card { padding: 2rem; border-radius: 12px; }
+    .form-select { appearance: auto; }
+    .file-input { padding: 0.6rem; }
+    .submit-btn { width: 100%; margin-top: 1rem; }
+    .error-message { color: #ef4444; font-size: 0.85rem; margin-top: 1rem; text-align: center; }
+    .success-message { color: #10b981; font-size: 0.85rem; margin-top: 1rem; text-align: center; }
+  `]
 })
 export class UploadComponent {
     private fb = inject(FormBuilder);
-    private musicService = inject(MusicService);
+    private uploadService = inject(UploadService);
     private router = inject(Router);
 
     isUploading = signal(false);
@@ -111,7 +121,7 @@ export class UploadComponent {
         formData.append('genre', this.uploadForm.value.genre);
         formData.append('audio', this.selectedFile);
 
-        this.musicService.uploadTrack(formData).subscribe({
+        this.uploadService.uploadTrack(formData).subscribe({
             next: () => {
                 this.isUploading.set(false);
                 this.successMessage.set('Track uploaded successfully!');
