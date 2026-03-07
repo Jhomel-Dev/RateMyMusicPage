@@ -105,16 +105,8 @@ export class OnboardingComponent implements OnInit, OnDestroy {
         localStorage.removeItem('onboarding_draft');
 
         // Let's update the local user role so guards pass immediately
-        const user = this.authService.currentUser();
-        if (user) {
-          const updatedUser = { ...user, role: this.onboardingForm.value.role };
-          localStorage.setItem('user_data', JSON.stringify(updatedUser));
-          // Trigger a re-login/re-set of signals manually or redirect directly via window locations 
-          // For now, assume authService reactive signal updates somehow, but router navigate should work
-          window.location.href = '/feed';
-        } else {
-          this.router.navigate(['/feed']);
-        }
+        this.authService.updateUser({ role: this.onboardingForm.value.role });
+        this.router.navigate(['/feed']);
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Error saving profile';

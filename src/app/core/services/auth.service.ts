@@ -3,31 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { Observable, tap } from 'rxjs';
 
-export interface User {
-    userId: string;
-    username: string;
-    role: string;
-}
-
-export interface AuthResponse {
-    token: string;
-    userId: string;
-    username: string;
-    role: string;
-}
-
-export interface CompleteProfileData {
-    role: string;
-    bio?: string;
-    avatarUrl?: string;
-}
-
-export interface ProfileResponse {
-    username: string;
-    avatarUrl?: string;
-    bio?: string;
-    role: string;
-}
+import { User, AuthResponse, CompleteProfileData, ProfileResponse } from '../interfaces/auth.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -50,8 +26,17 @@ export class AuthService {
 
     private getStoredUser(): User | null {
         try {
-            const data = localStorage.getItem('user_data');
-            return data ? JSON.parse(data) : null;
+            const token = localStorage.getItem('jwt_token');
+            if (token) {
+                const payload = token.split('.')[1];
+                const decoded = JSON.parse(atob(payload));
+                return {
+                    userId: decoded.sub || decoded.id,
+                    username: decoded.username,
+                    role: decoded.role || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role']
+                };
+            }
+            return null;
         } catch { return null; }
     }
 
@@ -62,7 +47,6 @@ export class AuthService {
                     this.setToken(response.token);
                     const userData = { userId: response.userId, username: response.username, role: response.role };
                     this.userSignal.set(userData);
-                    localStorage.setItem('user_data', JSON.stringify(userData));
                 }
             })
         );
@@ -75,7 +59,6 @@ export class AuthService {
                     this.setToken(response.token);
                     const userData = { userId: response.userId, username: response.username, role: response.role };
                     this.userSignal.set(userData);
-                    localStorage.setItem('user_data', JSON.stringify(userData));
                 }
             })
         );
@@ -89,11 +72,18 @@ export class AuthService {
         return this.http.get<ProfileResponse>(`${this.apiUrl}/profile`);
     }
 
+    updateUser(partialUser: Partial<User>) {
+        const currentUser = this.userSignal();
+        if (currentUser) {
+            const updatedUser = { ...currentUser, ...partialUser };
+            this.userSignal.set(updatedUser);
+        }
+    }
+
     logout() {
         this.tokenSignal.set(null);
         this.userSignal.set(null);
         localStorage.removeItem('jwt_token');
-        localStorage.removeItem('user_data');
     }
 
     getToken(): string | null {

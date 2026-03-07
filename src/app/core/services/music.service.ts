@@ -4,20 +4,7 @@ import { environment } from '../../../environments/environment';
 import { tap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-export interface Track {
-    id: string;
-    title: string;
-    artistId: string;
-    genre: string;
-    audioUrl: string;
-    eloScore: number;
-    userVote?: boolean;
-}
-
-export interface VoteResponse {
-    voteId: string | null;
-    newEloScore: number;
-}
+import { Track, VoteResponse } from '../interfaces/track.interface';
 
 
 @Injectable({
@@ -28,18 +15,22 @@ export class MusicService {
     private apiUrl = environment.apiUrl;
 
     // Private state signal
+    private readonly loadingSignal = signal<boolean>(true);
     private readonly tracksSignal = signal<Track[]>([]);
 
     // Public readonly state computed signal
+    readonly isLoading = computed(() => this.loadingSignal());
     readonly tracks = computed(() => this.tracksSignal());
 
     constructor() { }
 
     // Fetch all tracks and update signal state
     loadTracks() {
+        this.loadingSignal.set(true);
         this.http.get<Track[]>(`${this.apiUrl}/tracks`).pipe(
             catchError(err => {
                 console.error('Error fetching tracks', err);
+                this.loadingSignal.set(false);
                 return of([]);
             })
         ).subscribe((tracks) => {
@@ -47,6 +38,7 @@ export class MusicService {
             this.http.get<any[]>(`${this.apiUrl}/votes`).pipe(
                 catchError(err => {
                     console.error('Error fetching user votes', err);
+                    this.loadingSignal.set(false);
                     return of([]);
                 })
             ).subscribe((votes) => {
@@ -55,6 +47,7 @@ export class MusicService {
                     return { ...track, userVote: vote ? vote.isHot : undefined };
                 });
                 this.tracksSignal.set(tracksWithVotes);
+                this.loadingSignal.set(false);
             });
         });
     }

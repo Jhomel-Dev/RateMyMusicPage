@@ -1,22 +1,23 @@
 <div class="auth-container">
     <div class="auth-card glass-panel" style="max-width: 500px; padding: 2.5rem;">
-        <h2 class="auth-title" style="margin-bottom: 0.5rem;">Crea tu Perfil</h2>
-        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Completa tu información antes
-            de comenzar</p>
+        <h2 class="auth-title" style="margin-bottom: 0.5rem;">Create your Profile</h2>
+        <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">Complete your information
+            before
+            starting</p>
 
         <form [formGroup]="onboardingForm" (ngSubmit)="onSubmit()">
 
             <div class="form-group">
-                <label>Tu Rol</label>
+                <label>Your Role</label>
                 <select formControlName="role" class="form-input"
                     style="appearance: auto; background-color: rgba(255,255,255,0.05);">
-                    <option value="User">Usuario Normal</option>
-                    <option value="Artist">Artista (Puedo subir música)</option>
+                    <option value="User">Normal User</option>
+                    <option value="Artist">Artist (I can upload music)</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>Avatar / Foto de Perfil</label>
+                <label>Avatar / Profile Picture</label>
 
                 <div class="avatar-upload-area" (click)="triggerFileInput()">
                     <div class="avatar-preview" *ngIf="previewImage">
@@ -30,7 +31,7 @@
                             <polyline points="17 8 12 3 7 8"></polyline>
                             <line x1="12" y1="3" x2="12" y2="15"></line>
                         </svg>
-                        <p>Haz clic para subir un archivo, <b>pega con Ctrl+V</b> o ingresa una URL abajo.</p>
+                        <p>Click to upload a file, <b>paste with Ctrl+V</b> or enter a URL below.</p>
                     </div>
                 </div>
 
@@ -38,13 +39,13 @@
                     style="display: none;">
 
                 <input type="text" formControlName="avatarUrl" (input)="onUrlChange($event)" class="form-input"
-                    placeholder="O si prefieres, pega un enlace directo de imagen..." style="margin-top: 0.5rem;">
+                    placeholder="Or if you prefer, paste a direct image link..." style="margin-top: 0.5rem;">
             </div>
 
             <div class="form-group">
-                <label>Biografía (Opcional)</label>
+                <label>Biography (Optional)</label>
                 <textarea formControlName="bio" class="form-input"
-                    placeholder="Cuéntanos un poco sobre ti o tu música..." rows="3"
+                    placeholder="Tell us a little bit about yourself or your music..." rows="3"
                     style="resize: vertical;"></textarea>
             </div>
 
@@ -52,7 +53,7 @@
 
             <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;"
                 [disabled]="onboardingForm.invalid || isSubmitting">
-                {{ isSubmitting ? 'Guardando...' : 'Completar y Entrar' }}
+                {{ isSubmitting ? 'Saving...' : 'Complete and Enter' }}
             </button>
         </form>
     </div>
