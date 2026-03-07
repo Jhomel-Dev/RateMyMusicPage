@@ -5,12 +5,27 @@
     <a routerLink="/upload" class="btn btn-primary">Upload a New Track</a>
 </div>
 <!-- Reactive display using the tracks() signal from the service -->
-<div class="track-grid">
+<div class="track-grid" *ngIf="!musicService.isLoading()">
     <div *ngFor="let track of musicService.tracks()">
         <app-track-item [track]="track" (onVote)="handleVote($event)"></app-track-item>
     </div>
 </div>
 
-<div *ngIf="!musicService.tracks().length" style="text-align: center; margin-top: 4rem; color: var(--text-secondary);">
+<div *ngIf="musicService.isLoading()" style="text-align: center; margin-top: 4rem; color: var(--text-secondary);">
+    <div class="spinner"
+        style="display: inline-block; width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.1); border-radius: 50%; border-top-color: var(--accent-primary); animation: spin 1s ease-in-out infinite;">
+    </div>
+    <p style="margin-top: 1rem;">Loading tracks...</p>
+    <style>
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</div>
+
+<div *ngIf="!musicService.isLoading() && !musicService.tracks().length"
+    style="text-align: center; margin-top: 4rem; color: var(--text-secondary);">
     <p>No tracks found. Add one above to get started!</p>
 </div>

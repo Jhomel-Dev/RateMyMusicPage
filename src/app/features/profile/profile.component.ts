@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService, ProfileResponse } from '../../core/services/auth.service';
+import { AuthService } from '../../core/services/auth.service';
+import { ProfileResponse } from '../../core/interfaces/auth.interface';
 
 @Component({
     selector: 'app-profile',

@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Track } from '../../../core/services/music.service';
+import { Track } from '../../../core/interfaces/track.interface';
 
 @Component({
   selector: 'app-track-item',
