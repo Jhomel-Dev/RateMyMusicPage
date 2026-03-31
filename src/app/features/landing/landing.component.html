@@ -1,22 +1,110 @@
-<div class="landing-container landing-wrapper">
-    <h1 class="landing-title">
-        Discover and Rate <span class="landing-highlight">Incredible Music</span>
-    </h1>
-    <p class="landing-subtitle">
-        Join a thriving community of artists and listeners. Upload your latest tracks, build your profile, and see how
-        your music ranks on the charts.
-    </p>
-
-    <div class="landing-actions">
-        <button class="btn btn-primary landing-btn-primary" routerLink="/auth">
-            Get Started
+<!-- BEGIN: Hero Section -->
+<main class="relative pt-32 pb-20 overflow-hidden bg-gradient-mesh" data-purpose="hero-section">
+    <!-- Decorative Radial Blurs -->
+    <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[120px] -z-10"></div>
+    
+    <div class="max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold tracking-widest uppercase mb-8">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+        </span>
+        Vibe check your library
+      </div>
+  
+      <h1 class="text-5xl md:text-8xl font-bold tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-500">
+        Rate. Discover. <span class="text-primary text-glow italic">Ascend.</span>
+      </h1>
+  
+      <p class="max-w-2xl text-lg md:text-xl text-slate-400 mb-12 leading-relaxed">
+        Experience the first music platform powered by competitive ELO scoring. 
+        Pit your favorite tracks against the world and watch the definitive global 
+        leaderboard evolve in real-time.
+      </p>
+  
+      <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+        <button class="px-8 py-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-theme shadow-xl shadow-primary/20 transition-all transform hover:scale-105" routerLink="/auth">
+          Start Listening
         </button>
-        <button class="btn btn-secondary landing-btn-secondary" routerLink="/auth">
-            Learn More
+        <button class="px-8 py-4 glass-card hover:bg-slate-800 text-white font-bold rounded-theme transition-all" routerLink="/auth">
+          Join as Artist
         </button>
+      </div>
+  
+      <!-- Preview Mockup Container -->
+      <div class="mt-20 w-full max-w-5xl glass-card rounded-t-2xl p-4 md:p-8 relative" data-purpose="hero-preview">
+        <div class="aspect-video rounded-xl bg-slate-900 overflow-hidden flex items-center justify-center border border-slate-800">
+          <div class="text-slate-600 flex flex-col items-center gap-4">
+            <svg class="w-16 h-16 opacity-20" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+              <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"></path>
+            </svg>
+            <span class="text-sm font-medium tracking-widest uppercase">Live Platform Preview</span>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <!-- Decoration -->
-    <div class="landing-decoration">
+  </main>
+  <!-- END: Hero Section -->
+  
+  <!-- BEGIN: How It Works Section -->
+  <section class="py-24 bg-slate-950" data-purpose="features-section">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="mb-20">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">How it works</h2>
+        <p class="text-slate-400">The science of sound meets competitive discovery.</p>
+      </div>
+  
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="group p-8 glass-card rounded-theme hover:border-primary/50 transition-all duration-500">
+          <div class="w-14 h-14 bg-primary/10 rounded-theme flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11 19l-7-7 7-7"></path><path d="M20 12H4"></path></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Head-to-Head Battles</h3>
+          <p class="text-slate-400 leading-relaxed">
+            Listen to two tracks side-by-side. Choose the winner. Our ELO algorithm calculates the relative quality based on real human preference.
+          </p>
+        </div>
+  
+        <!-- Feature 2 -->
+        <div class="group p-8 glass-card rounded-theme hover:border-primary/50 transition-all duration-500">
+          <div class="w-14 h-14 bg-primary/10 rounded-theme flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">ELO Dynamic Rankings</h3>
+          <p class="text-slate-400 leading-relaxed">
+            Every vote matters. Tracks earn points based on the difficulty of their opponent, creating a true, unbiased global leaderboard.
+          </p>
+        </div>
+  
+        <!-- Feature 3 -->
+        <div class="group p-8 glass-card rounded-theme hover:border-primary/50 transition-all duration-500">
+          <div class="w-14 h-14 bg-primary/10 rounded-theme flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          </div>
+          <h3 class="text-xl font-bold mb-3">Hyper-Discovery</h3>
+          <p class="text-slate-400 leading-relaxed">
+            Our 'Ascend' engine finds hidden gems that are winning battles but haven't hit the charts yet, putting new talent on your radar.
+          </p>
+        </div>
+      </div>
     </div>
-</div>
+  </section>
+  <!-- END: How It Works Section -->
+  
+  <!-- BEGIN: Footer -->
+  <footer class="py-12 border-t border-slate-900" data-purpose="site-footer">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-8">
+      <div class="text-slate-500 text-sm">
+        © 2026 RateMyMusic. All rights reserved.
+      </div>
+      <div class="flex gap-8 text-sm text-slate-400">
+        <a href="#" class="hover:text-primary transition-colors">Privacy</a>
+        <a href="#" class="hover:text-primary transition-colors">Terms</a>
+        <a href="#" class="hover:text-primary transition-colors">Twitter</a>
+        <a href="#" class="hover:text-primary transition-colors">Discord</a>
+      </div>
+    </div>
+  </footer>
+  <!-- END: Footer -->

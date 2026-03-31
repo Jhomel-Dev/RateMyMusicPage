@@ -1,57 +1,131 @@
-<div class="auth-container">
-    <div class="auth-card glass-panel auth-card-wide">
-        <h2 class="auth-title auth-title-margin">Create your Profile</h2>
-        <p class="auth-subtitle">Complete your information
-            before
-            starting</p>
+<main class="max-w-4xl mx-auto px-6 py-12" data-purpose="onboarding-module">
+  <!-- BEGIN: WelcomeSection -->
+  <section class="mb-12 text-center" data-purpose="onboarding-welcome">
+    <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+      Let's build your stage.
+    </h1>
+    <p class="text-slate-400 text-lg max-w-xl mx-auto">
+      Finish setting up your profile to start discovering and rating the next big hits in the music scene.
+    </p>
+  </section>
+  <!-- END: WelcomeSection -->
 
-        <form [formGroup]="onboardingForm" (ngSubmit)="onSubmit()">
-
-            <div class="form-group">
-                <label>Your Role</label>
-                <select formControlName="role" class="form-input form-select">
-                    <option value="User">Normal User</option>
-                    <option value="Artist">Artist (I can upload music)</option>
-                </select>
+  <form [formGroup]="onboardingForm" (ngSubmit)="onSubmit()" class="space-y-8">
+    
+    <!-- BEGIN: RoleSelector -->
+    <section data-purpose="role-selection">
+      <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
+        <span class="text-primary">01.</span> I am a...
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- User Option -->
+        <label class="relative group cursor-pointer h-full">
+          <input type="radio" formControlName="role" value="User" class="peer sr-only" />
+          <div class="glass-card p-8 rounded-theme border-2 border-transparent transition-all duration-300 peer-checked:border-primary peer-checked:bg-primary/5 hover:border-slate-700 h-full">
+            <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <svg class="w-6 h-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
             </div>
-
-            <div class="form-group">
-                <label>Avatar / Profile Picture</label>
-
-                <div class="avatar-upload-area" (click)="triggerFileInput()">
-                    <div class="avatar-preview" *ngIf="previewImage">
-                        <img [src]="previewImage" alt="Avatar Preview" class="avatar-preview-img">
-                    </div>
-                    <div class="avatar-placeholder" *ngIf="!previewImage">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="17 8 12 3 7 8"></polyline>
-                            <line x1="12" y1="3" x2="12" y2="15"></line>
-                        </svg>
-                        <p>Click to upload a file, <b>paste with Ctrl+V</b> or enter a URL below.</p>
-                    </div>
-                </div>
-
-                <input type="file" id="avatarUpload" accept="image/*" (change)="onFileSelected($event)"
-                    class="file-input-hide">
-
-                <input type="text" formControlName="avatarUrl" (input)="onUrlChange($event)"
-                    class="form-input url-input" placeholder="Or if you prefer, paste a direct image link...">
+            <h3 class="text-lg font-bold mb-2">Listener</h3>
+            <p class="text-sm text-slate-400">I want to discover new music, leave reviews, and build my ultimate playlists.</p>
+            <div class="absolute top-4 right-4 text-primary opacity-0 peer-checked:opacity-100 transition-opacity">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
             </div>
+          </div>
+        </label>
 
-            <div class="form-group">
-                <label>Biography (Optional)</label>
-                <textarea formControlName="bio" class="form-input bio-textarea"
-                    placeholder="Tell us a little bit about yourself or your music..." rows="3"></textarea>
+        <!-- Artist Option -->
+        <label class="relative group cursor-pointer h-full">
+          <input type="radio" formControlName="role" value="Artist" class="peer sr-only" />
+          <div class="glass-card p-8 rounded-theme border-2 border-transparent transition-all duration-300 peer-checked:border-primary peer-checked:bg-primary/5 hover:border-slate-700 h-full">
+            <div class="w-12 h-12 rounded-full bg-slate-800 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <svg class="w-6 h-6 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
             </div>
+            <h3 class="text-lg font-bold mb-2">Artist</h3>
+            <p class="text-sm text-slate-400">I want to upload my music, get rated by listeners, and grow my fanbase.</p>
+            <div class="absolute top-4 right-4 text-primary opacity-0 peer-checked:opacity-100 transition-opacity">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"></path></svg>
+            </div>
+          </div>
+        </label>
+      </div>
+    </section>
+    <!-- END: RoleSelector -->
 
-            <p class="error-msg" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <!-- BEGIN: AvatarSection -->
+    <section data-purpose="avatar-upload">
+      <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
+        <span class="text-primary">02.</span> Visual Identity
+      </h2>
+      <div class="glass-card p-8 rounded-theme">
+        <div class="flex flex-col md:flex-row items-center gap-8">
+          
+          <!-- Avatar Preview -->
+          <div class="relative group cursor-pointer" (click)="triggerFileInput()">
+            <div class="w-32 h-32 rounded-full bg-slate-800 border-4 border-slate-700 overflow-hidden flex items-center justify-center">
+              <img *ngIf="previewImage" [src]="previewImage" alt="Profile Preview" class="w-full h-full object-cover"/>
+              <svg *ngIf="!previewImage" class="w-12 h-12 text-slate-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" clip-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"></path></svg>
+            </div>
+            <div class="absolute inset-0 rounded-full bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            </div>
+          </div>
 
-            <button type="submit" class="btn btn-primary submit-btn"
-                [disabled]="onboardingForm.invalid || isSubmitting">
-                {{ isSubmitting ? 'Saving...' : 'Complete and Enter' }}
-            </button>
-        </form>
+          <!-- Upload Zone -->
+          <div class="flex-1 w-full">
+            <div class="border-2 border-dashed border-slate-700 rounded-theme p-8 text-center hover:border-primary/50 transition-colors bg-slate-900/50 group" id="drop-zone" (click)="triggerFileInput()">
+              <input type="file" id="avatarUpload" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
+              <div class="space-y-2 cursor-pointer">
+                <p class="text-sm font-medium">Click, drag, or <b>paste</b> your avatar here</p>
+                <p class="text-xs text-slate-500">PNG, JPG or WEBP up to 5MB</p>
+                <button type="button" class="mt-4 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-theme transition-all">
+                  Browse Files
+                </button>
+              </div>
+            </div>
+            
+            <input type="text" formControlName="avatarUrl" (input)="onUrlChange($event)" class="input-dark w-full mt-4 px-4 py-3 rounded-theme transition-all text-sm" placeholder="Or if you prefer, paste a direct image link..."/>
+          </div>
+
+        </div>
+      </div>
+    </section>
+    <!-- END: AvatarSection -->
+
+    <!-- BEGIN: ProfileDetails -->
+    <section data-purpose="bio-details">
+      <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
+        <span class="text-primary">03.</span> About You
+      </h2>
+      <div class="glass-card p-8 rounded-theme space-y-6">
+        <div class="space-y-2">
+          <div class="flex justify-between">
+            <label class="block text-sm font-medium text-slate-300" for="bio">Bio (Optional)</label>
+            <span class="text-xs text-slate-500" [ngClass]="{'text-amber-500': (onboardingForm.get('bio')?.value?.length || 0) >= 240}">
+              {{ onboardingForm.get('bio')?.value?.length || 0 }} / 250
+            </span>
+          </div>
+          <textarea class="input-dark w-full px-4 py-3 rounded-theme transition-all resize-none" id="bio" maxlength="250" formControlName="bio" placeholder="Tell the community about your musical taste or your artistic journey..." rows="4"></textarea>
+        </div>
+      </div>
+    </section>
+    <!-- END: ProfileDetails -->
+
+    <!-- Error container -->
+    <div *ngIf="errorMessage" class="text-red-400 text-sm text-center">
+      {{ errorMessage }}
     </div>
-</div>
+
+    <!-- BEGIN: FormActions -->
+    <section class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4" data-purpose="form-navigation">
+      <button type="button" class="text-slate-500 hover:text-slate-300 transition-colors font-medium">
+        Skip for now
+      </button>
+      <div class="flex items-center gap-4 w-full sm:w-auto">
+        <button type="submit" [disabled]="onboardingForm.invalid || isSubmitting" class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-primary hover:from-indigo-500 hover:to-purple-500 text-white font-bold rounded-theme transition-all shadow-lg shadow-primary/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+          {{ isSubmitting ? 'Saving...' : 'Complete Profile' }}
+        </button>
+      </div>
+    </section>
+    <!-- END: FormActions -->
+  </form>
+</main>

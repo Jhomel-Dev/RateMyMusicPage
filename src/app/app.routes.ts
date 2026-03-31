@@ -29,6 +29,7 @@ export const routes: Routes = [
     { path: 'onboarding', loadComponent: () => import('./features/onboarding/onboarding.component').then(c => c.OnboardingComponent), canActivate: [authGuard] },
     { path: 'incomplete-profile', loadComponent: () => import('./features/incomplete-profile/incomplete-profile.component').then(c => c.IncompleteProfileComponent), canActivate: [authGuard] },
     { path: 'auth', loadComponent: () => import('./features/auth/auth.component').then(c => c.AuthComponent), canActivate: [guestGuard] },
+    { path: 'reset-password', loadComponent: () => import('./features/auth/reset-password/reset-password.component').then(c => c.ResetPasswordComponent), canActivate: [guestGuard] },
     { path: '**', redirectTo: '' }
 ];
 

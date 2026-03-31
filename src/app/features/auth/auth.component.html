@@ -1,57 +1,103 @@
-<div class="auth-container">
-  <div class="auth-card glass-panel">
-    <h2 class="auth-title">{{ isLoginMode() ? 'Welcome Back' : 'Create Account' }}</h2>
+<main class="w-full max-w-md mx-auto" data-purpose="authentication-module">
+  <!-- Branding Header -->
+  <div class="text-center mb-8" data-purpose="branding">
+    <h1 class="text-4xl font-bold tracking-tight mb-2">
+      RateMy<span class="text-primary">Music</span>
+    </h1>
+    <p class="text-slate-400 text-sm">Join the community of music enthusiasts.</p>
+  </div>
 
-    <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+  <!-- Glass Authentication Card -->
+  <div class="bg-surface/60 backdrop-blur-xl border border-white/10 rounded-theme p-8 shadow-2xl relative overflow-hidden" id="auth-card">
+    
+    <!-- Tab Switcher -->
+    <div class="flex mb-8 border-b border-white/10" data-purpose="form-tabs">
+      <button 
+        class="flex-1 pb-4 text-sm font-semibold transition-colors border-b-2"
+        [ngClass]="isLoginMode() ? 'border-primary text-white' : 'border-transparent text-slate-400 hover:text-slate-200'"
+        (click)="setMode(true)">
+        Sign In
+      </button>
+      <button 
+        class="flex-1 pb-4 text-sm font-semibold transition-colors border-b-2"
+        [ngClass]="!isLoginMode() ? 'border-primary text-white' : 'border-transparent text-slate-400 hover:text-slate-200'"
+        (click)="setMode(false)">
+        Create Account
+      </button>
+    </div>
 
-      <!-- SOLO EN REGISTRO -->
-      <div class="form-group" *ngIf="!isLoginMode()">
-        <label for="username" class="form-label">Username</label>
-        <input id="username" type="text" formControlName="username" class="form-input" placeholder="your_username"
-          autocomplete="username">
-        <small class="error-text"
-          *ngIf="authForm.get('username')?.invalid && (authForm.get('username')?.dirty || authForm.get('username')?.touched)">
+    <!-- Combined Form -->
+    <form class="space-y-5" [formGroup]="authForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Only in Register -->
+      <div class="space-y-1" *ngIf="!isLoginMode()">
+        <label class="text-xs font-medium text-slate-300 uppercase tracking-wider" for="username">Username</label>
+        <input class="bg-black/20 border border-white/10 text-white placeholder-slate-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/25 w-full px-4 py-3 rounded-theme transition-all" id="username" type="text" formControlName="username" placeholder="your_username" />
+        <small class="text-red-400 text-xs mt-1 block" *ngIf="authForm.get('username')?.invalid && (authForm.get('username')?.dirty || authForm.get('username')?.touched)">
           Username is required
         </small>
       </div>
 
-      <!-- PARA AMBOS -->
-      <div class="form-group">
-        <label for="email" class="form-label">Email</label>
-        <input id="email" type="email" formControlName="email" class="form-input" placeholder="your@email.com"
-          autocomplete="email">
-        <small class="error-text"
-          *ngIf="authForm.get('email')?.invalid && (authForm.get('email')?.dirty || authForm.get('email')?.touched)">
+      <!-- Email (Both) -->
+      <div class="space-y-1">
+        <label class="text-xs font-medium text-slate-300 uppercase tracking-wider" for="email">Email Address</label>
+        <input class="bg-black/20 border border-white/10 text-white placeholder-slate-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/25 w-full px-4 py-3 rounded-theme transition-all" id="email" type="email" formControlName="email" placeholder="name@example.com" required />
+        <small class="text-red-400 text-xs mt-1 block" *ngIf="authForm.get('email')?.invalid && (authForm.get('email')?.dirty || authForm.get('email')?.touched)">
           Please enter a valid email address
         </small>
       </div>
 
-      <div class="form-group">
-        <label for="password" class="form-label">Password</label>
-        <input id="password" type="password" formControlName="password" class="form-input" placeholder="••••••••"
-          autocomplete="current-password">
-        <small class="error-text"
-          *ngIf="authForm.get('password')?.invalid && (authForm.get('password')?.dirty || authForm.get('password')?.touched)">
-          Password must be at least 6 characters long
-        </small>
+      <!-- Password (Both) -->
+      <div class="space-y-1">
+        <label class="text-xs font-medium text-slate-300 uppercase tracking-wider block" for="password">Password</label>
+        <input class="bg-black/20 border border-white/10 text-white placeholder-slate-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/25 w-full px-4 py-3 rounded-theme transition-all" id="password" type="password" formControlName="password" placeholder="••••••••" required />
+        <div class="flex justify-between items-start mt-1">
+          <small class="text-red-400 text-xs block" *ngIf="authForm.get('password')?.invalid && (authForm.get('password')?.dirty || authForm.get('password')?.touched)">
+            Password must be at least 6 characters long
+          </small>
+          <a class="text-xs text-slate-400 hover:text-white transition-colors ml-auto" routerLink="/reset-password" *ngIf="isLoginMode()">Forgot?</a>
+        </div>
       </div>
 
-      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;"
-        [disabled]="authForm.invalid">
-        {{ isLoginMode() ? 'Sign In' : 'Sign Up' }}
+      <!-- Error message -->
+      <div *ngIf="errorMessage()" class="text-red-400 text-sm text-center">
+        {{ errorMessage() }}
+      </div>
+
+      <button 
+        type="submit" 
+        [disabled]="authForm.invalid"
+        class="w-full bg-gradient-to-r from-indigo-600 to-primary hover:from-indigo-500 hover:to-purple-500 text-white font-bold py-3 rounded-theme transition-all transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-indigo-500/20 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+        {{ isLoginMode() ? 'Sign In' : 'Create Account' }}
       </button>
-
-      <div *ngIf="errorMessage()" class="error-msg" [innerHTML]="errorMessage()"></div>
-
     </form>
 
-    <div class="toggle-text">
-      <span *ngIf="isLoginMode()">
-        Don't have an account? <a class="toggle-link" (click)="toggleMode()">Register</a>
-      </span>
-      <span *ngIf="!isLoginMode()">
-        Already have an account? <a class="toggle-link" (click)="toggleMode()">Login</a>
-      </span>
+    <!-- Social Auth Section -->
+    <div class="mt-8" data-purpose="social-auth">
+      <div class="relative flex items-center justify-center mb-6">
+        <div class="border-t border-white/10 w-full"></div>
+        <span class="absolute bg-slate-800/50 px-3 text-[10px] text-slate-400 uppercase tracking-widest">Or continue with</span>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <button type="button" class="flex items-center justify-center gap-2 py-2 px-4 rounded-theme border border-white/10 hover:bg-white/5 transition-colors text-sm text-slate-200">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-2.21 5.39-7.84 5.39-4.84 0-8.79-4.01-8.79-8.94s3.95-8.94 8.79-8.94c2.75 0 4.59 1.16 5.64 2.16l2.58-2.48C19.1 1.05 16.03 0 12.48 0 5.86 0 .5 5.37.5 12s5.36 12 11.98 12c6.91 0 11.48-4.87 11.48-11.69 0-.79-.08-1.39-.21-1.99h-11.27z"></path></svg>
+          Google
+        </button>
+        <button type="button" class="flex items-center justify-center gap-2 py-2 px-4 rounded-theme border border-white/10 hover:bg-white/5 transition-colors text-sm text-slate-200">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.153-1.11-1.46-1.11-1.46-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+          GitHub
+        </button>
+      </div>
     </div>
+
   </div>
-</div>
+
+  <!-- Footer Links -->
+  <footer class="mt-8 text-center text-slate-500 text-xs" data-purpose="footer-links">
+    <p>© 2026 RateMyMusic. All rights reserved.</p>
+    <div class="mt-2 space-x-4">
+      <a href="javascript:void(0)" class="hover:text-slate-300 transition-colors">Terms of Service</a>
+      <a href="javascript:void(0)" class="hover:text-slate-300 transition-colors">Privacy Policy</a>
+    </div>
+  </footer>
+</main>

@@ -1,71 +1,21 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-auth',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './auth.component.html',
-  styles: [`
-    .auth-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: calc(100vh - 80px); /* subtract header height */
-      padding: 2rem;
-    }
-    .auth-card {
-      width: 100%;
-      max-width: 400px;
-      padding: 2.5rem;
-    }
-    .auth-title {
-      text-align: center;
-      margin-bottom: 2rem;
-      font-size: 2rem;
-      font-weight: 700;
-      background: var(--accent-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .toggle-text {
-      text-align: center;
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
-    }
-    .toggle-link {
-        color: var(--accent-primary);
-        cursor: pointer;
-        font-weight: 600;
-        transition: var(--transition);
-    }
-    .toggle-link:hover {
-        color: var(--accent-primary-hover);
-        text-decoration: underline;
-    }
-    .error-msg {
-      color: #ef4444;
-      font-size: 0.85rem;
-      margin-top: 0.5rem;
-      text-align: center;
-    }
-    .error-text {
-      color: #ef4444;
-      font-size: 0.8rem;
-      margin-top: 0.25rem;
-      display: block;
-    }
-  `]
+  styles: []
 })
 export class AuthComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
 
-  // Use a signal to toggle between login and register modes
   isLoginMode = signal<boolean>(true);
   errorMessage = signal<string>('');
 
@@ -75,8 +25,9 @@ export class AuthComponent {
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
-  toggleMode() {
-    this.isLoginMode.update(mode => !mode);
+  setMode(mode: boolean) {
+    if (this.isLoginMode() === mode) return;
+    this.isLoginMode.set(mode);
     this.errorMessage.set('');
     this.authForm.reset();
 

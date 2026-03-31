@@ -1,31 +1,39 @@
-<nav class="navbar" *ngIf="!isNavHidden()">
-    <div class="brand" routerLink="/">
-        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none"
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 18V5l12-2v13"></path>
-            <circle cx="6" cy="18" r="3"></circle>
-            <circle cx="18" cy="16" r="3"></circle>
+<nav class="fixed top-0 w-full z-50 glass-card border-t-0 border-x-0" *ngIf="!isNavHidden()">
+  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    
+    <div class="flex items-center gap-2 cursor-pointer" routerLink="/">
+      <!-- Logo Icon -->
+      <div class="w-10 h-10 bg-primary rounded-theme flex items-center justify-center shadow-lg shadow-primary/20">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 18V5l12-2v13"></path>
+          <circle cx="6" cy="18" r="3"></circle>
+          <circle cx="18" cy="16" r="3"></circle>
         </svg>
-        Rate My Music
+      </div>
+      <span class="text-xl font-bold tracking-tight text-slate-100">RateMyMusic</span>
     </div>
 
     <!-- Authenticated Links -->
-    <div class="nav-actions nav-links" *ngIf="isAuthenticated()">
-        <a routerLink="/feed" class="nav-link">Feed</a>
-        <a routerLink="/upload" class="nav-link">Upload Track</a>
-        <a routerLink="/profile" class="nav-link">Profile</a>
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400" *ngIf="isAuthenticated()">
+      <a routerLink="/feed" class="hover:text-primary transition-colors cursor-pointer">Feed</a>
+      <a routerLink="/upload" class="hover:text-primary transition-colors cursor-pointer">Upload Track</a>
+      <a routerLink="/profile" class="hover:text-primary transition-colors cursor-pointer">Profile</a>
 
-        <div class="user-greeting" *ngIf="authService.currentUser()">
-            Hello, {{ authService.currentUser()?.username }}
-        </div>
-        <button class="btn btn-secondary btn-nav" (click)="logout()">
-            Logout
-        </button>
+      <div class="text-slate-300" *ngIf="authService.currentUser()">
+          Hello, {{ authService.currentUser()?.username }}
+      </div>
+      <button class="px-5 py-2 border border-slate-700 rounded-theme hover:bg-slate-800 transition-all text-slate-100" (click)="logout()">
+          Logout
+      </button>
     </div>
 
     <!-- Guest Links -->
-    <div class="nav-actions nav-links" *ngIf="!isAuthenticated()">
-        <a routerLink="/auth" class="btn btn-secondary btn-nav">Sign In</a>
-        <a routerLink="/auth" class="btn btn-primary btn-nav">Register</a>
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400" *ngIf="!isAuthenticated()">
+      <a routerLink="/auth" class="hover:text-primary transition-colors cursor-pointer">Discover</a>
+      <a routerLink="/auth" class="hover:text-primary transition-colors cursor-pointer">Charts</a>
+      <a routerLink="/auth" class="hover:text-primary transition-colors cursor-pointer">Community</a>
+      <a class="px-5 py-2 border border-slate-700 rounded-theme hover:bg-slate-800 transition-all text-slate-100 cursor-pointer" routerLink="/auth">Sign In</a>
     </div>
+
+  </div>
 </nav>

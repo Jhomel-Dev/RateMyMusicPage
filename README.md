@@ -1,59 +1,62 @@
-# RateMyMusicFront
+# 📱 Rate My Music - Frontend UI (La Cabeza)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.19.
+Bienvenido a la documentación de **RateMyMusicPage**. Esta es la aplicación frontend principal, desarrollada con **Angular 19**.
 
-## Development server
+## 🚀 ¿Qué hace este servicio?
 
-To start a local development server, run:
+Este es el punto exclusivo de interacción para los usuarios finales. Sus responsabilidades incluyen:
+- Renderizar la interfaz de usuario (UI).
+- Manejar la experiencia de navegación (Routing) y estado de la aplicación.
+- Proveer un reproductor de música integrado en el navegador.
+- Enviar de manera segura los Tokens JWT al Backend.
+- **Nota Importante:** Este servicio *nunca* se comunica directamente con los microservicios de Auth o Media. **Todas sus peticiones HTTP se dirigen al API Gateway.**
 
-```bash
-ng serve
-```
+**Stack Tecnológico:** Angular 19, TypeScript, RxJS, HTML/CSS.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## 📁 Estructura del Proyecto
 
-## Code scaffolding
+La estructura sigue las mejores prácticas recomendadas por Angular, alojada dentro de `src/`:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- `src/app/`: Carpeta principal donde reside toda la lógica de la aplicación.
+  - `components/`: Componentes UI reutilizables (Botones, reproductores, tarjetas).
+  - `pages/` (o vistas): Componentes enrutables (Login, Home, Perfil).
+  - `services/`: Lógica de inyección de dependencias (`MusicService`, `AuthService`) que encapsula las llamadas HTTP con `HttpClient`.
+  - `interceptors/`: Interceptores de HTTP (ej. para adjuntar automáticamente el JWT Token en todos los requests).
+  - `app.routes.ts`: Configuración del ruteo de la aplicación.
+- `src/assets/`: Archivos estáticos como imágenes, íconos y fuentes.
+- `src/environments/`: Configuración por entorno (Desarrollo vs. Producción). Aquí definirás la URL del API Gateway.
+- `angular.json`: Configuración maestra del CLI de Angular.
 
-```bash
-ng generate component component-name
-```
+## 🛠️ Requisitos Previos
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- [Node.js](https://nodejs.org/) instalado.
+- [Angular CLI](https://angular.dev/tools/cli) (Opcional pero recomendado: `npm install -g @angular/cli`).
 
-```bash
-ng generate --help
-```
+## 🏃‍♂️ Cómo levantar el proyecto localmente
 
-## Building
+1. **Instalar dependencias:**
+   ```bash
+   npm install
+   # o pnpm install
+   ```
 
-To build the project run:
+2. **Configurar el entorno:**
+   Verifica el archivo `src/environments/environment.ts` o `environment.development.ts`. Asegúrate de que `apiUrl` apunte al puerto del Gateway (por defecto `http://localhost:5000` o `http://localhost:4000`, dependiendo de tu config).
 
-```bash
-ng build
-```
+3. **Ejecutar servidor de desarrollo:**
+   ```bash
+   ng serve -o
+   ```
+   Esto compilará la aplicación y la abrirá automáticamente en tu navegador (típicamente `http://localhost:4200`).
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## 🏗️ Topología del Ecosistema
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Para entender cómo encaja esta pieza en el rompecabezas de 4 partes:
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. 👤 **La Cabeza:** [RateMyMusicPage](https://github.com/Jhomel-Dev/RateMyMusicPage) (👉 **Estás aquí**)
+2. 🚪 **El Cuello:** [RateMyMusicGateway](https://github.com/Jhomel-Dev/RateMyMusicGateway) - Enrutador al que debes apuntar.
+3. 🦶 **Los Pies (Backend):**
+   * 🔐 **RateMyMusicAuth:** Usuarios y seguridad.
+   * ☁️ **RateMyMusicMedia:** Multimedia y base de datos de música.

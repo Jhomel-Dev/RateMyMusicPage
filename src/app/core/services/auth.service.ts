@@ -12,13 +12,10 @@ export class AuthService {
     private http = inject(HttpClient);
     private apiUrl = environment.apiUrl + '/auth';
 
-    // Signals for reactive state
     private readonly tokenSignal = signal<string | null>(localStorage.getItem('jwt_token'));
 
-    // Computed signal for easy authentication check
     readonly isAuthenticated = computed(() => !!this.tokenSignal());
 
-    // Store user info
     private readonly userSignal = signal<User | null>(this.getStoredUser());
     readonly currentUser = this.userSignal.asReadonly();
 
@@ -70,6 +67,10 @@ export class AuthService {
 
     getProfile(): Observable<ProfileResponse> {
         return this.http.get<ProfileResponse>(`${this.apiUrl}/profile`);
+    }
+
+    updateProfile(data: Partial<CompleteProfileData>): Observable<any> {
+        return this.http.put(`${this.apiUrl}/profile`, data);
     }
 
     updateUser(partialUser: Partial<User>) {
