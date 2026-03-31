@@ -9,9 +9,9 @@ import { AuthService } from './core/services/auth.service';
   standalone: true,
   imports: [CommonModule, NavbarComponent, RouterOutlet],
   template: `
-    <app-navbar></app-navbar>
+    <app-navbar *ngIf="!isFeedPage()"></app-navbar>
 
-    <main class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <main [ngClass]="{'container mx-auto px-6 pt-28 pb-8 min-h-screen': !isLandingPage() && !isFeedPage() && !isProfilePage()}">
         <router-outlet></router-outlet>
     </main>
   `
@@ -22,5 +22,17 @@ export class AppComponent {
 
   constructor() {
     // Relying on Route Guards in app.routes.ts instead of forceful root redirect
+  }
+
+  isLandingPage(): boolean {
+    return this.router.url === '/' || this.router.url === '/landing';
+  }
+
+  isFeedPage(): boolean {
+    return this.router.url === '/feed';
+  }
+
+  isProfilePage(): boolean {
+    return this.router.url === '/profile';
   }
 }
