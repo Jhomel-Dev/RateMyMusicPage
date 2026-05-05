@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { catchError, forkJoin, map, of } from 'rxjs';
+import { catchError, of, Observable } from 'rxjs';
 import { Track } from '../interfaces/track.interface';
 
 @Injectable({
@@ -11,51 +11,63 @@ export class TrackService {
     private http = inject(HttpClient);
     private apiUrl = environment.apiUrl;
 
-    private readonly loadingSignal = signal<boolean>(true);
+    private readonly loadingSignal = signal<boolean>(false);
     private readonly tracksSignal = signal<Track[]>([]);
+    private readonly feedSignal = signal<Track[]>([]);
+    private readonly seenTrackIdsSignal = signal<string[]>([]);
 
     readonly isLoading = computed(() => this.loadingSignal());
     readonly tracks = computed(() => this.tracksSignal());
+    readonly feed = computed(() => this.feedSignal());
+
+    loadFeed() {
+        if (this.loadingSignal()) return;
+
+        this.loadingSignal.set(true);
+        const params = { excludeIds: this.seenTrackIdsSignal().join(',') };
+        
+        this.http.get<Track[]>(`${this.apiUrl}/tracks/feed`, { params })
+            .pipe(catchError(() => of([])))
+            .subscribe(newTracks => this.handleFeedUpdate(newTracks));
+    }
+
+    private handleFeedUpdate(newTracks: Track[]) {
+        const currentIds = new Set(this.feedSignal().map(t => t.id));
+        const uniqueTracks = newTracks.filter(t => !currentIds.has(t.id));
+
+        this.feedSignal.update(current => [...current, ...uniqueTracks]);
+        this.seenTrackIdsSignal.update(current => [...current, ...uniqueTracks.map(t => t.id)]);
+        this.loadingSignal.set(false);
+    }
 
     loadTracks() {
         this.loadingSignal.set(true);
-
-        const tracks$ = this.http.get<Track[]>(`${this.apiUrl}/tracks`).pipe(
-            catchError(err => {
-                console.error('Error fetching tracks', err);
-                return of([]);
-            })
-        );
-
-        const votes$ = this.http.get<any[]>(`${this.apiUrl}/votes`).pipe(
-            catchError(err => {
-                console.error('Error fetching user votes', err);
-                return of([]);
-            })
-        );
-
-        forkJoin({ tracks: tracks$, votes: votes$ }).pipe(
-            map(({ tracks, votes }) => {
-                return tracks.map(track => {
-                    const vote = votes.find((v: any) => v.trackId === track.id);
-                    return { ...track, userVote: vote ? vote.isHot : undefined };
-                });
-            })
-        ).subscribe(tracksWithVotes => {
-            this.tracksSignal.set(tracksWithVotes);
-            this.loadingSignal.set(false);
-        });
+        this.http.get<Track[]>(`${this.apiUrl}/tracks`)
+            .pipe(catchError(() => of([])))
+            .subscribe(tracks => {
+                this.tracksSignal.set(tracks);
+                this.loadingSignal.set(false);
+            });
     }
 
-    updateTrackVote(trackId: string, info: { newEloScore: number; isHot: boolean; voteId: string | null }) {
-        this.tracksSignal.update(tracks => tracks.map(track =>
-            track.id === trackId
-                ? { ...track, eloScore: info.newEloScore, userVote: info.voteId ? info.isHot : undefined }
-                : track
-        ));
+    getMyUploads(): Observable<Track[]> {
+        return this.http.get<Track[]>(`${this.apiUrl}/tracks/me/uploads`);
+    }
+
+    getRankings(genre: string): Observable<Track[]> {
+        return this.http.get<Track[]>(`${this.apiUrl}/tracks/rankings/${genre}`);
+    }
+
+    updateTrackInteraction(trackId: string, updates: Partial<Track>) {
+        const updater = (tracks: Track[]) => tracks.map(track =>
+            track.id === trackId ? { ...track, ...updates } : track
+        );
+        this.tracksSignal.update(updater);
+        this.feedSignal.update(updater);
     }
 
     addTrack(newTrack: Track) {
-        this.tracksSignal.update(tracks => [...tracks, newTrack]);
+        this.tracksSignal.update(tracks => [newTrack, ...tracks]);
+        this.feedSignal.update(feed => [newTrack, ...feed]);
     }
 }

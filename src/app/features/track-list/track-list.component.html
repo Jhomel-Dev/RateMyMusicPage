@@ -22,20 +22,21 @@
     </header>
 
     <!-- FeedContent -->
-    <main class="h-screen flex-1 no-scrollbar"
+    <main #feedContainer class="h-screen flex-1 no-scrollbar"
           [ngClass]="tracks().length > 1 ? 'overflow-y-scroll snap-y snap-mandatory overscroll-contain' : 'overflow-hidden'"
+          (scroll)="onScroll($event)"
           data-purpose="track-grid" style="scrollbar-width: none;">
-      <ng-container *ngIf="!trackService.isLoading()">
-        <app-track-item *ngFor="let track of tracks()" [track]="track" (onVote)="handleVote($event)" (onToggleComments)="toggleComments()"></app-track-item>
-        <div *ngIf="!tracks().length" class="h-screen w-full snap-start relative overflow-hidden flex items-center justify-center flex-col gap-4 text-slate-400">
-          <span class="material-symbols-outlined text-6xl opacity-50">music_off</span>
-          <p class="text-lg">No tracks found. Add one to get started!</p>
-        </div>
-      </ng-container>
+      
+      <app-track-item *ngFor="let track of tracks()" [track]="track" (onToggleComments)="toggleComments()"></app-track-item>
+      
+      <div *ngIf="!tracks().length && !trackService.isLoading()" class="h-screen w-full snap-start relative overflow-hidden flex items-center justify-center flex-col gap-4 text-slate-400">
+        <span class="material-symbols-outlined text-6xl opacity-50">music_off</span>
+        <p class="text-lg">No tracks found. Add one to get started!</p>
+      </div>
 
-      <div *ngIf="trackService.isLoading()" class="h-screen w-full snap-start relative overflow-hidden flex items-center justify-center flex-col text-slate-400 gap-4">
+      <div *ngIf="trackService.isLoading()" class="h-screen w-full snap-start relative overflow-hidden flex items-center justify-center flex-col text-slate-400 gap-4 bg-slate-900/50 backdrop-blur-sm">
         <div class="w-10 h-10 border-4 border-white/10 border-t-primary rounded-full animate-spin"></div>
-        <p>Loading tracks...</p>
+        <p>Loading discovery feed...</p>
       </div>
     </main>
 
@@ -43,7 +44,7 @@
     <nav class="fixed bottom-0 inset-x-0 h-16 bg-surface/60 backdrop-blur-xl border-t border-white/10 flex items-center justify-around z-50" [style.width]="showComments() ? 'calc(100% - 380px)' : '100%'">
       <button class="flex flex-col items-center gap-1 text-primary">
         <span class="material-symbols-outlined text-2xl">home</span>
-        <span class="text-[9px] font-bold uppercase tracking-widest">Home</span>
+        <span class="text-[9px] font-bold uppercase tracking-widest">Feed</span>
       </button>
       <button class="flex flex-col items-center gap-1 text-slate-400 hover:text-white transition-colors">
         <span class="material-symbols-outlined text-2xl">search</span>

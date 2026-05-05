@@ -1,46 +1,51 @@
 <section class="h-screen w-full snap-start relative overflow-hidden">
-  <img alt="Background" class="absolute inset-0 w-full h-full object-cover brightness-50 blur-[30px] scale-110 -z-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgDUQHRBwFEwCzlgAnl0vLysuwrcHNzdIve6YCszFJRknhotwpJGUrcKFTHdbmB9Zbc_s028e-Y9qcIQPIIpUoZ9WxHDdOKUXaEXusX0Ryn9xRHqQIIOaGHJy9R8nqXbory58MmuUNN75l8XXKKG2x4zseXU_9pIrEzQKQG5vJlwtXQBzi-f2YkXP1LGSEpfiqGinPmXR_rUzxoIMHAj12Cn6mvE9d64PH6Us3ECUGjqLxQeVWpvqHgFC2Vrz21OzO-IVl5lP1jlw"/>
+  <img alt="Background" class="absolute inset-0 w-full h-full object-cover brightness-50 blur-[30px] scale-110 -z-10" [src]="track().audioUrl ? 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1000' : ''"/>
   <div class="absolute inset-0 flex flex-col items-center justify-center z-10 px-8">
     <div class="relative group">
       <div class="relative w-72 h-72 rounded-3xl overflow-hidden border border-white/20">
-        <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgDUQHRBwFEwCzlgAnl0vLysuwrcHNzdIve6YCszFJRknhotwpJGUrcKFTHdbmB9Zbc_s028e-Y9qcIQPIIpUoZ9WxHDdOKUXaEXusX0Ryn9xRHqQIIOaGHJy9R8nqXbory58MmuUNN75l8XXKKG2x4zseXU_9pIrEzQKQG5vJlwtXQBzi-f2YkXP1LGSEpfiqGinPmXR_rUzxoIMHAj12Cn6mvE9d64PH6Us3ECUGjqLxQeVWpvqHgFC2Vrz21OzO-IVl5lP1jlw"/>
+        <img class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1000"/>
         <div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors">
-          <button class="w-20 h-20 flex items-center justify-center rounded-full bg-surface/60 backdrop-blur-xl border border-white/10 hover:bg-white/20 transition-all transform hover:scale-110 active:scale-95">
-            <span class="material-symbols-outlined text-5xl text-white ml-1">play_arrow</span>
+          <button (click)="togglePlay()" class="w-20 h-20 flex items-center justify-center rounded-full bg-surface/60 backdrop-blur-xl border border-white/10 hover:bg-white/20 transition-all transform hover:scale-110 active:scale-95">
+            <span class="material-symbols-outlined text-5xl text-white" [class.ml-1]="!isPlaying()">
+              {{ isPlaying() ? 'pause' : 'play_arrow' }}
+            </span>
           </button>
         </div>
       </div>
       <!-- Visualizer -->
       <div class="flex items-end justify-center gap-1.5 mt-10 h-10 opacity-80">
-        <div class="w-1 bg-primary rounded-full h-4 animate-pulse"></div>
-        <div class="w-1 bg-primary rounded-full h-8 animate-pulse delay-75"></div>
-        <div class="w-1 bg-primary rounded-full h-6 animate-pulse delay-150"></div>
-        <div class="w-1 bg-primary rounded-full h-3 animate-pulse delay-300"></div>
-        <div class="w-1 bg-primary rounded-full h-7 animate-pulse delay-500"></div>
-        <div class="w-1 bg-primary rounded-full h-5 animate-pulse delay-200"></div>
+        <div class="w-1 bg-primary rounded-full h-4" [class.animate-pulse]="isPlaying()"></div>
+        <div class="w-1 bg-primary rounded-full h-8" [class.animate-pulse]="isPlaying()" style="animation-delay: 75ms;"></div>
+        <div class="w-1 bg-primary rounded-full h-6" [class.animate-pulse]="isPlaying()" style="animation-delay: 150ms;"></div>
+        <div class="w-1 bg-primary rounded-full h-3" [class.animate-pulse]="isPlaying()" style="animation-delay: 300ms;"></div>
+        <div class="w-1 bg-primary rounded-full h-7" [class.animate-pulse]="isPlaying()" style="animation-delay: 500ms;"></div>
+        <div class="w-1 bg-primary rounded-full h-5" [class.animate-pulse]="isPlaying()" style="animation-delay: 200ms;"></div>
       </div>
     </div>
   </div>
   <div class="absolute right-4 bottom-32 flex flex-col gap-4 z-20">
     <button class="flex flex-col items-center gap-1 transition-all duration-200 active:scale-95" (click)="voteUp()">
       <div class="w-12 h-12 flex items-center justify-center rounded-full bg-surface/60 backdrop-blur-xl border border-white/10 transition-colors"
-           [ngClass]="track().userVote === true ? 'bg-gradient-to-br from-green-500 to-green-600 !border-green-500/50' : ''">
+           [ngClass]="track().userVote === 'upvote' ? 'bg-gradient-to-br from-green-500 to-green-600 !border-green-500/50' : ''">
         <span class="material-symbols-outlined text-2xl text-white">thumb_up</span>
       </div>
       <span class="text-[10px] font-bold tracking-wider text-white shadow-black/50 drop-shadow-md">HOT</span>
     </button>
     <button class="flex flex-col items-center gap-1 transition-all duration-200 active:scale-95" (click)="voteDown()">
       <div class="w-12 h-12 flex items-center justify-center rounded-full bg-surface/60 backdrop-blur-xl border border-white/10 transition-colors"
-           [ngClass]="track().userVote === false ? 'bg-gradient-to-br from-red-500 to-red-600 !border-red-500/50' : ''">
+           [ngClass]="track().userVote === 'downvote' ? 'bg-gradient-to-br from-red-500 to-red-600 !border-red-500/50' : ''">
         <span class="material-symbols-outlined text-2xl text-white">thumb_down</span>
       </div>
       <span class="text-[10px] font-bold tracking-wider text-white shadow-black/50 drop-shadow-md">NOT</span>
     </button>
-    <button class="flex flex-col items-center gap-1 transition-all duration-200 active:scale-95 group">
-      <div class="w-12 h-12 flex items-center justify-center rounded-full bg-surface/60 backdrop-blur-xl group-hover:text-yellow-400 transition-colors border border-white/10">
-        <span class="material-symbols-outlined text-2xl text-white group-hover:text-yellow-400">bookmark</span>
+    <button class="flex flex-col items-center gap-1 transition-all duration-200 active:scale-95 group" (click)="toggleFavorite()">
+      <div class="w-12 h-12 flex items-center justify-center rounded-full bg-surface/60 backdrop-blur-xl transition-colors border border-white/10"
+           [ngClass]="track().isFavorite ? 'text-yellow-400 !border-yellow-400/50 bg-yellow-400/20' : ''">
+        <span class="material-symbols-outlined text-2xl" [ngClass]="track().isFavorite ? 'text-yellow-400 fill-1' : 'text-white'">bookmark</span>
       </div>
-      <span class="text-[10px] font-bold tracking-wider uppercase text-white shadow-black/50 drop-shadow-md">Save</span>
+      <span class="text-[10px] font-bold tracking-wider uppercase text-white shadow-black/50 drop-shadow-md">
+        {{ track().isFavorite ? 'Saved' : 'Save' }}
+      </span>
     </button>
     <button class="flex flex-col items-center gap-1 transition-all duration-200 active:scale-95" (click)="toggleComments()">
       <div class="w-12 h-12 flex items-center justify-center rounded-full bg-surface/60 backdrop-blur-xl border border-white/10">
@@ -54,24 +59,22 @@
       </div>
       <span class="text-[10px] font-bold tracking-wider text-white shadow-black/50 drop-shadow-md">SHARE</span>
     </button>
-    <div class="vinyl-record mt-4 w-12 h-12 rounded-full border border-white/30 overflow-hidden shadow-xl ring-4 ring-black/20">
-      <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgDUQHRBwFEwCzlgAnl0vLysuwrcHNzdIve6YCszFJRknhotwpJGUrcKFTHdbmB9Zbc_s028e-Y9qcIQPIIpUoZ9WxHDdOKUXaEXusX0Ryn9xRHqQIIOaGHJy9R8nqXbory58MmuUNN75l8XXKKG2x4zseXU_9pIrEzQKQG5vJlwtXQBzi-f2YkXP1LGSEpfiqGinPmXR_rUzxoIMHAj12Cn6mvE9d64PH6Us3ECUGjqLxQeVWpvqHgFC2Vrz21OzO-IVl5lP1jlw"/>
-    </div>
   </div>
   <div class="absolute bottom-0 inset-x-0 pt-6 pb-12 px-6 lg:pr-20 bg-gradient-to-t from-slate-950/90 to-transparent z-10 w-full">
     <div class="flex items-center gap-3 mb-1">
       <h2 class="text-2xl font-bold text-white shadow-black/50 drop-shadow-md">{{ track().title }}</h2>
       <div class="bg-surface/60 backdrop-blur-xl px-3 py-1 rounded-full text-[10px] font-mono font-bold text-primary flex items-center gap-1 border border-white/20">
         <span class="material-symbols-outlined text-[14px]">stars</span>
-        {{ track().eloScore | number:'1.0-0' }} ELO
+        {{ track().score | number:'1.0-0' }} SCORE
+      </div>
+      <div class="bg-surface/60 backdrop-blur-xl px-3 py-1 rounded-full text-[10px] font-mono font-bold text-slate-400 flex items-center gap-1 border border-white/20">
+        <span class="material-symbols-outlined text-[14px]">play_arrow</span>
+        {{ track().playCount | number }}
       </div>
     </div>
     <p class="text-lg text-slate-300 mb-4 shadow-black/50 drop-shadow-md">{{ track().artistName }}</p>
     <div class="overflow-hidden w-48">
       <div class="genre-marquee flex gap-4">
-        <span class="text-[10px] font-bold bg-white/10 border border-white/10 px-3 py-1.5 rounded-full uppercase tracking-[0.2em] flex items-center gap-1.5 text-white shadow-black/50 drop-shadow-md backdrop-blur-sm">
-          <span class="material-symbols-outlined text-[14px]">music_note</span> {{ track().genre || 'Music' }}
-        </span>
         <span class="text-[10px] font-bold bg-white/10 border border-white/10 px-3 py-1.5 rounded-full uppercase tracking-[0.2em] flex items-center gap-1.5 text-white shadow-black/50 drop-shadow-md backdrop-blur-sm">
           <span class="material-symbols-outlined text-[14px]">music_note</span> {{ track().genre || 'Music' }}
         </span>
