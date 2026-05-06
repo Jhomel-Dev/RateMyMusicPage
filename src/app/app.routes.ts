@@ -2,6 +2,7 @@ import { Routes, CanActivateFn, Router } from '@angular/router';
 import { inject } from '@angular/core';
 import { AuthService } from './core/services/auth.service';
 import { profileCompleteGuard } from './core/guards/profile-complete.guard';
+import { catchError, map, of } from 'rxjs';
 
 const authGuard: CanActivateFn = () => {
     const authService = inject(AuthService);
@@ -9,6 +10,17 @@ const authGuard: CanActivateFn = () => {
     if (authService.isAuthenticated()) {
         return true;
     }
+    
+    const token = localStorage.getItem('jwt_token');
+    const refreshToken = localStorage.getItem('jwt_refresh_token');
+    
+    if (token && refreshToken) {
+        return authService.refreshToken().pipe(
+            map(() => true),
+            catchError(() => of(router.parseUrl('/auth')))
+        );
+    }
+
     return router.parseUrl('/auth');
 };
 

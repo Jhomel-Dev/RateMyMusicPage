@@ -13,8 +13,21 @@ export class AuthService {
     private apiUrl = environment.apiUrl + '/auth';
 
     private readonly tokenSignal = signal<string | null>(localStorage.getItem('jwt_token'));
+    private readonly refreshTokenSignal = signal<string | null>(localStorage.getItem('jwt_refresh_token'));
 
-    readonly isAuthenticated = computed(() => !!this.tokenSignal());
+    readonly isAuthenticated = computed(() => {
+        const token = this.tokenSignal();
+        if (!token) return false;
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            if (payload.exp && Math.floor(new Date().getTime() / 1000) >= payload.exp) {
+                return false;
+            }
+            return true;
+        } catch {
+            return false;
+        }
+    });
 
     private readonly userSignal = signal<User | null>(this.getStoredUser());
     readonly currentUser = this.userSignal.asReadonly();
@@ -41,7 +54,7 @@ export class AuthService {
         return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
             tap(response => {
                 if (response.token) {
-                    this.setToken(response.token);
+                    this.setTokens(response.token, response.refreshToken);
                     const userData = { userId: response.userId, username: response.username, role: response.role };
                     this.userSignal.set(userData);
                 }
@@ -53,7 +66,7 @@ export class AuthService {
         return this.http.post<AuthResponse>(`${this.apiUrl}/register`, userData).pipe(
             tap(response => {
                 if (response.token) {
-                    this.setToken(response.token);
+                    this.setTokens(response.token, response.refreshToken);
                     const userData = { userId: response.userId, username: response.username, role: response.role };
                     this.userSignal.set(userData);
                 }
@@ -83,16 +96,36 @@ export class AuthService {
 
     logout() {
         this.tokenSignal.set(null);
+        this.refreshTokenSignal.set(null);
         this.userSignal.set(null);
         localStorage.removeItem('jwt_token');
+        localStorage.removeItem('jwt_refresh_token');
     }
 
     getToken(): string | null {
         return this.tokenSignal();
     }
 
-    private setToken(token: string) {
+    getRefreshToken(): string | null {
+        return this.refreshTokenSignal();
+    }
+
+    refreshToken(): Observable<AuthResponse> {
+        const token = this.tokenSignal();
+        const refreshToken = this.refreshTokenSignal();
+        return this.http.post<AuthResponse>(`${this.apiUrl}/refresh`, { token, refreshToken }).pipe(
+            tap(response => {
+                if (response.token && response.refreshToken) {
+                    this.setTokens(response.token, response.refreshToken);
+                }
+            })
+        );
+    }
+
+    private setTokens(token: string, refreshToken: string) {
         this.tokenSignal.set(token);
+        this.refreshTokenSignal.set(refreshToken);
         localStorage.setItem('jwt_token', token);
+        localStorage.setItem('jwt_refresh_token', refreshToken);
     }
 }

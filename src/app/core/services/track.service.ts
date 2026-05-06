@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
-import { catchError, of, Observable } from 'rxjs';
+import { catchError, of, Observable, timeout } from 'rxjs';
 import { Track } from '../interfaces/track.interface';
 
 @Injectable({
@@ -27,11 +27,19 @@ export class TrackService {
         const params = { excludeIds: this.seenTrackIdsSignal().join(',') };
         
         this.http.get<Track[]>(`${this.apiUrl}/tracks/feed`, { params })
-            .pipe(catchError(() => of([])))
+            .pipe(
+                timeout(5000), // Prevent infinite hanging if backend is deadlocked
+                catchError(() => of([]))
+            )
             .subscribe(newTracks => this.handleFeedUpdate(newTracks));
     }
 
     private handleFeedUpdate(newTracks: Track[]) {
+        if (!Array.isArray(newTracks)) {
+            console.error('Invalid feed response:', newTracks);
+            newTracks = [];
+        }
+
         const currentIds = new Set(this.feedSignal().map(t => t.id));
         const uniqueTracks = newTracks.filter(t => !currentIds.has(t.id));
 

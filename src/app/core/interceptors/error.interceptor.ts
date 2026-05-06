@@ -1,15 +1,33 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse, HttpRequest, HttpHandlerFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { catchError, throwError } from 'rxjs';
+import { catchError, throwError, switchMap } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
-export const errorInterceptor: HttpInterceptorFn = (req, next) => {
+export const errorInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
     const router = inject(Router);
     const authService = inject(AuthService);
 
     return next(req).pipe(
         catchError((error: HttpErrorResponse) => {
+            if (error.status === 401 && !req.url.includes('/auth/login') && !req.url.includes('/auth/refresh')) {
+                return authService.refreshToken().pipe(
+                    switchMap((authResp) => {
+                        const newReq = req.clone({
+                            setHeaders: {
+                                Authorization: `Bearer ${authResp.token}`
+                            }
+                        });
+                        return next(newReq);
+                    }),
+                    catchError((refreshErr) => {
+                        authService.logout();
+                        router.navigate(['/auth']);
+                        return throwError(() => new Error('Session expired. Please log in again.'));
+                    })
+                );
+            }
+
             let errorMessage = 'An unknown error occurred!';
 
             if (error.error instanceof ErrorEvent) {
