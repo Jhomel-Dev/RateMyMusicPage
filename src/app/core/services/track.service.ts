@@ -15,28 +15,38 @@ export class TrackService {
     private readonly tracksSignal = signal<Track[]>([]);
     private readonly feedSignal = signal<Track[]>([]);
     private readonly seenTrackIdsSignal = signal<string[]>([]);
+    private readonly myUploadsSignal = signal<Track[]>([]);
 
     readonly isLoading = computed(() => this.loadingSignal());
     readonly tracks = computed(() => this.tracksSignal());
     readonly feed = computed(() => this.feedSignal());
+    readonly myUploads = computed(() => this.myUploadsSignal());
 
     loadFeed() {
         if (this.loadingSignal()) return;
 
         this.loadingSignal.set(true);
-        const params = { excludeIds: this.seenTrackIdsSignal().join(',') };
-        
+        const params = { 
+            excludeIds: this.seenTrackIdsSignal().join(','),
+            _t: new Date().getTime().toString()
+        };
+
         this.http.get<Track[]>(`${this.apiUrl}/tracks/feed`, { params })
             .pipe(
                 timeout(5000), // Prevent infinite hanging if backend is deadlocked
-                catchError(() => of([]))
+                catchError((error) => {
+                    console.error('Error fetching tracks feed:', error);
+                    return of([]);
+                })
             )
             .subscribe(newTracks => this.handleFeedUpdate(newTracks));
     }
 
-    private handleFeedUpdate(newTracks: Track[]) {
+    private handleFeedUpdate(response: any) {
+        let newTracks: Track[] = Array.isArray(response) ? response : (response?.tracks || []);
+
         if (!Array.isArray(newTracks)) {
-            console.error('Invalid feed response:', newTracks);
+            console.error('Invalid feed response:', response);
             newTracks = [];
         }
 
@@ -58,8 +68,22 @@ export class TrackService {
             });
     }
 
-    getMyUploads(): Observable<Track[]> {
-        return this.http.get<Track[]>(`${this.apiUrl}/tracks/me/uploads`);
+    loadMyUploads() {
+        this.loadingSignal.set(true);
+        const params = { _t: new Date().getTime().toString() };
+        this.http.get<Track[]>(`${this.apiUrl}/tracks/me/uploads`, { params })
+            .pipe(
+                catchError((error) => {
+                    console.error('Error fetching my uploads:', error);
+                    return of([]);
+                })
+            )
+            .subscribe(tracks => {
+                console.log('My uploads response:', tracks);
+                const trackArray = Array.isArray(tracks) ? tracks : ((tracks as any)?.tracks || []);
+                this.myUploadsSignal.set(trackArray);
+                this.loadingSignal.set(false);
+            });
     }
 
     getRankings(genre: string): Observable<Track[]> {
@@ -77,5 +101,6 @@ export class TrackService {
     addTrack(newTrack: Track) {
         this.tracksSignal.update(tracks => [newTrack, ...tracks]);
         this.feedSignal.update(feed => [newTrack, ...feed]);
+        this.myUploadsSignal.update(uploads => [newTrack, ...uploads]);
     }
 }

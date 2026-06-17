@@ -106,7 +106,12 @@ export class OnboardingComponent implements OnInit, OnDestroy {
 
         // Let's update the local user role so guards pass immediately
         this.authService.updateUser({ role: this.onboardingForm.value.role });
-        this.router.navigate(['/feed']);
+
+        // Refresh token to get updated role claims from the backend so reload won't trigger redirect
+        this.authService.refreshToken().subscribe({
+          next: () => this.router.navigate(['/feed']),
+          error: () => this.router.navigate(['/feed'])
+        });
       },
       error: (err) => {
         this.errorMessage = err.error?.message || 'Error saving profile';

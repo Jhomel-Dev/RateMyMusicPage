@@ -13,7 +13,8 @@ export class InteractionService {
     private apiUrl = environment.apiUrl;
 
     vote(trackId: string, voteType: VoteType) {
-        return this.http.post<VoteResponse>(`${this.apiUrl}/votes`, { trackId, voteType }).pipe(
+        const isHot = voteType === 'upvote';
+        return this.http.post<VoteResponse>(`${this.apiUrl}/votes`, { trackId, isHot }).pipe(
             tap(response => this.trackService.updateTrackInteraction(trackId, {
                 score: response.newScore,
                 votesCount: response.newVotesCount,

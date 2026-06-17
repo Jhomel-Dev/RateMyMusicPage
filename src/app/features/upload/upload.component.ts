@@ -9,23 +9,23 @@ import { Router } from '@angular/router';
     standalone: true,
     imports: [CommonModule, ReactiveFormsModule],
     template: `
-    <div class="upload-container">
-        <h1 class="page-title">Upload Track</h1>
+    <div class="max-w-xl mx-auto my-8 p-8">
+        <h1 class="mb-8 text-4xl font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-white to-primary">Upload Track</h1>
         
-        <div class="glass-panel upload-card">
-            <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+        <div class="p-8 rounded-2xl bg-surface/60 backdrop-blur-xl border border-white/10 shadow-2xl">
+            <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
                 
-                <div class="form-group">
-                    <label for="title" class="form-label">Track Title</label>
-                    <input id="title" type="text" formControlName="title" class="form-input" placeholder="Song Name">
-                    <small class="error-text" *ngIf="uploadForm.get('title')?.invalid && (uploadForm.get('title')?.dirty || uploadForm.get('title')?.touched)">
+                <div class="flex flex-col gap-2">
+                    <label for="title" class="text-sm font-medium text-slate-300">Track Title</label>
+                    <input id="title" type="text" formControlName="title" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white placeholder-slate-500" placeholder="Song Name">
+                    <small class="text-red-400 text-sm mt-1" *ngIf="uploadForm.get('title')?.invalid && (uploadForm.get('title')?.dirty || uploadForm.get('title')?.touched)">
                         Track title is required
                     </small>
                 </div>
 
-                <div class="form-group">
-                    <label for="genre" class="form-label">Genre</label>
-                    <select id="genre" formControlName="genre" class="form-input form-select">
+                <div class="flex flex-col gap-2">
+                    <label for="genre" class="text-sm font-medium text-slate-300">Genre</label>
+                    <select id="genre" formControlName="genre" class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-white">
                         <option value="" disabled selected>Select a genre</option>
                         <option value="Pop">Pop</option>
                         <option value="Rock">Rock</option>
@@ -36,25 +36,25 @@ import { Router } from '@angular/router';
                         <option value="Jazz">Jazz</option>
                         <option value="Other">Other</option>
                     </select>
-                    <small class="error-text" *ngIf="uploadForm.get('genre')?.invalid && (uploadForm.get('genre')?.dirty || uploadForm.get('genre')?.touched)">
+                    <small class="text-red-400 text-sm mt-1" *ngIf="uploadForm.get('genre')?.invalid && (uploadForm.get('genre')?.dirty || uploadForm.get('genre')?.touched)">
                         Please select a genre
                     </small>
                 </div>
 
-                <div class="form-group">
-                    <label for="audio" class="form-label">Audio File (.mp3, .wav)</label>
-                    <input id="audio" type="file" (change)="onFileSelected($event)" accept="audio/*" class="form-input file-input">
+                <div class="flex flex-col gap-2">
+                    <label for="audio" class="text-sm font-medium text-slate-300">Audio File (.mp3, .wav)</label>
+                    <input id="audio" type="file" (change)="onFileSelected($event)" accept="audio/*" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-primary file:text-surface hover:file:bg-primary/90">
                 </div>
 
-                <button type="submit" class="btn btn-primary submit-btn" [disabled]="isUploading()">
+                <button type="submit" class="w-full mt-4 py-3.5 px-4 bg-primary text-surface font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed" [disabled]="isUploading()">
                     {{ isUploading() ? 'Uploading...' : 'Upload Track' }}
                 </button>
 
-                <div *ngIf="errorMessage()" class="error-message">
+                <div *ngIf="errorMessage()" class="text-red-400 text-sm text-center mt-2 p-3 bg-red-400/10 rounded-lg border border-red-400/20">
                     {{ errorMessage() }}
                 </div>
                 
-                <div *ngIf="successMessage()" class="success-message">
+                <div *ngIf="successMessage()" class="text-green-400 text-sm text-center mt-2 p-3 bg-green-400/10 rounded-lg border border-green-400/20">
                     {{ successMessage() }}
                 </div>
 
@@ -62,16 +62,7 @@ import { Router } from '@angular/router';
         </div>
     </div>
   `,
-    styles: [`
-    .upload-container { max-width: 500px; margin: 2rem auto; padding: 2rem; }
-    .page-title { margin-bottom: 2rem; font-size: 2.5rem; text-align: center; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .upload-card { padding: 2rem; border-radius: 12px; }
-    .form-select { appearance: auto; }
-    .file-input { padding: 0.6rem; }
-    .submit-btn { width: 100%; margin-top: 1rem; }
-    .error-message { color: #ef4444; font-size: 0.85rem; margin-top: 1rem; text-align: center; }
-    .success-message { color: #10b981; font-size: 0.85rem; margin-top: 1rem; text-align: center; }
-  `]
+    styles: []
 })
 export class UploadComponent {
     private fb = inject(FormBuilder);

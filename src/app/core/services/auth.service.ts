@@ -117,6 +117,17 @@ export class AuthService {
             tap(response => {
                 if (response.token && response.refreshToken) {
                     this.setTokens(response.token, response.refreshToken);
+                    // Update user signal from new token to capture updated claims
+                    try {
+                        const payload = response.token.split('.')[1];
+                        const decoded = JSON.parse(atob(payload));
+                        const userData: User = {
+                            userId: decoded.sub || decoded.id || response.userId || '',
+                            username: decoded.username || response.username || '',
+                            role: decoded.role || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || response.role || 'User'
+                        };
+                        this.userSignal.set(userData);
+                    } catch {}
                 }
             })
         );

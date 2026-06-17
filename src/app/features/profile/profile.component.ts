@@ -33,7 +33,7 @@ export class ProfileComponent implements OnInit {
 
     ngOnInit() {
         this.loadProfile();
-        this.trackService.loadTracks();
+        this.trackService.loadMyUploads();
     }
 
     loadProfile() {
